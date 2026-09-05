@@ -1,0 +1,23 @@
+import { useState } from 'react'
+import type { AppSettings } from '../types'
+import { Icon } from './Icon'
+
+interface SettingsModalProps {
+  settings: AppSettings
+  onSettingsChange: (settings: AppSettings) => void
+  onClose: () => void
+  onExportJson: () => void
+  onExportMarkdown: () => void
+  onExportCsv: () => void
+  onExportBibtex: () => void
+  onExportRis: () => void
+  onExportAnki: () => void
+  onExportXlsx: () => void
+  onExportArchive: () => void
+  onExportBackup: () => void
+}
+
+export function SettingsModal({ settings, onSettingsChange, onClose, onExportJson, onExportMarkdown, onExportCsv, onExportBibtex, onExportRis, onExportAnki, onExportXlsx, onExportArchive, onExportBackup }: SettingsModalProps) {
+  const [section, setSection] = useState<'General' | 'Translation' | 'Export'>('General')
+  return <div className="modal-backdrop" onMouseDown={onClose}><div className="settings-modal" onMouseDown={(event) => event.stopPropagation()}><div className="settings-head"><div><span className="panel-eyebrow">RESEARCH READER</span><h2>Settings</h2></div><button className="icon-button" onClick={onClose} aria-label="Close settings"><Icon name="x" size={18} /></button></div><div className="settings-body"><nav className="settings-nav">{(['General', 'Translation', 'Export'] as const).map((name) => <button className={section === name ? 'active' : ''} key={name} onClick={() => setSection(name)}>{name}</button>)}</nav><div className="settings-content">{section === 'General' && <><label className="setting-row"><span>Theme</span><select defaultValue="Light"><option>Light</option></select></label><label className="setting-row"><span>Auto backup</span><input type="checkbox" checked={settings.autoBackup} onChange={(event) => onSettingsChange({ ...settings, autoBackup: event.target.checked })} /></label><label className="setting-row"><span>Backup retention</span><input type="number" min="1" max="30" value={settings.backupRetention} onChange={(event) => onSettingsChange({ ...settings, backupRetention: Number(event.target.value) })} /></label><p className="settings-note">PDF、元数据和 Figure 资产默认保存在本机。邮箱账户和云端同步需要额外的服务端、隐私和安全设计，本版本保持 local-first。</p></>}{section === 'Translation' && <><label className="setting-row"><span>Default provider</span><select value={settings.preferredProvider} onChange={(event) => onSettingsChange({ ...settings, preferredProvider: event.target.value as AppSettings['preferredProvider'] })}><option value="mymemory">MyMemory neural · online</option><option value="local-demo">Offline glossary · demo</option></select></label><label className="setting-row"><span>Target language</span><select value={settings.targetLanguage} onChange={(event) => onSettingsChange({ ...settings, targetLanguage: event.target.value as AppSettings['targetLanguage'] })}><option value="zh-CN">简体中文</option><option value="en">English</option></select></label><label className="setting-row"><span>Long text threshold</span><input type="number" min="100" value={settings.maxTranslationChars} onChange={(event) => onSettingsChange({ ...settings, maxTranslationChars: Number(event.target.value) })} /></label><div className="provider-status"><Icon name="check" size={15} /> {settings.preferredProvider === 'mymemory' ? 'MyMemory online translation is ready' : 'Offline glossary is ready'} <span>{settings.preferredProvider === 'mymemory' ? 'online' : 'local'}</span></div><p className="settings-note">在线翻译会把选中的英文发送到 MyMemory；涉及未公开或敏感内容时，请改用离线词汇模式。Baidu 需要安全的服务端密钥桥接，暂不显示为可选提供商。</p></>}{section === 'Export' && <><div className="export-actions"><button className="outline-button" onClick={onExportJson}><Icon name="download" size={15} /> JSON</button><button className="outline-button" onClick={onExportMarkdown}><Icon name="download" size={15} /> Markdown</button><button className="outline-button" onClick={onExportCsv}><Icon name="download" size={15} /> CSV</button><button className="outline-button" onClick={onExportXlsx}><Icon name="download" size={15} /> XLSX</button><button className="outline-button" onClick={onExportBibtex}><Icon name="download" size={15} /> BibTeX</button><button className="outline-button" onClick={onExportRis}><Icon name="download" size={15} /> RIS</button><button className="outline-button" onClick={onExportAnki}><Icon name="download" size={15} /> Anki TSV</button><button className="outline-button" onClick={onExportArchive}><Icon name="archive" size={15} /> Full ZIP archive</button><button className="outline-button" onClick={onExportBackup}><Icon name="archive" size={15} /> Download backup</button></div><p className="settings-note">导出不包含 API Key、Token、Cookie 或 ChatGPT 会话；ZIP 会携带 Figure PNG、元数据 sidecar、Markdown、表格和文献目录。</p></>}</div></div></div></div>
+}
