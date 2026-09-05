@@ -39,7 +39,7 @@ jobs:
           fi
 
       - name: Build macOS app package
-        run: ./script/build_and_run.sh package
+        run: bash ./script/build_and_run.sh package
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
