@@ -2,6 +2,8 @@
 
 Research Reader 是一个面向生物医学英文文献的本地优先 macOS 阅读器。
 
+本项目源代码采用 [Apache License 2.0](LICENSE) 发布。第三方依赖仍受其各自许可证约束。
+
 当前版本已经实现：
 
 - PDF 文件导入与 PDF.js 页面渲染
